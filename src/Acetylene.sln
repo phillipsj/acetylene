@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Acetylene", "Acetylene\Acetylene.csproj", "{46E17B0F-F665-4D72-AD9F-967E6B2EE1A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acetylene.Tests", "Acetylene.Tests\Acetylene.Tests.csproj", "{EFDA4763-36F3-4440-8D8C-1E0A8A02D196}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{46E17B0F-F665-4D72-AD9F-967E6B2EE1A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46E17B0F-F665-4D72-AD9F-967E6B2EE1A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46E17B0F-F665-4D72-AD9F-967E6B2EE1A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46E17B0F-F665-4D72-AD9F-967E6B2EE1A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFDA4763-36F3-4440-8D8C-1E0A8A02D196}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFDA4763-36F3-4440-8D8C-1E0A8A02D196}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFDA4763-36F3-4440-8D8C-1E0A8A02D196}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFDA4763-36F3-4440-8D8C-1E0A8A02D196}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C6813720-0CAC-4492-A0DF-015CACF33B29}
+	EndGlobalSection
+EndGlobal

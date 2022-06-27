@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acetylene", "Acetylene\Acetylene.csproj", "{46E17B0F-F665-4D72-AD9F-967E6B2EE1A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acetylene.Tests", "Acetylene.Tests\Acetylene.Tests.csproj", "{AC73E63B-575F-486E-807D-8407BB95AFEA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{46E17B0F-F665-4D72-AD9F-967E6B2EE1A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46E17B0F-F665-4D72-AD9F-967E6B2EE1A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46E17B0F-F665-4D72-AD9F-967E6B2EE1A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46E17B0F-F665-4D72-AD9F-967E6B2EE1A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC73E63B-575F-486E-807D-8407BB95AFEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC73E63B-575F-486E-807D-8407BB95AFEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC73E63B-575F-486E-807D-8407BB95AFEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC73E63B-575F-486E-807D-8407BB95AFEA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

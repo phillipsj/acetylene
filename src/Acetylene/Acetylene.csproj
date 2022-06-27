@@ -8,6 +8,21 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <COMReference Include="{4fb2d46f-efc8-4643-bcd0-6e5bfa6a174c}">
+        <WrapperTool>tlbimp</WrapperTool>
+        <VersionMinor>4</VersionMinor>
+        <VersionMajor>2</VersionMajor>
+        <Guid>4fb2d46f-efc8-4643-bcd0-6e5bfa6a174c</Guid>
+      </COMReference>
+      <COMReference Include="{bee4bfec-6683-3e67-9167-3c0cbc68f40a}">
+        <WrapperTool>tlbimp</WrapperTool>
+        <VersionMinor>4</VersionMinor>
+        <VersionMajor>2</VersionMajor>
+        <Guid>bee4bfec-6683-3e67-9167-3c0cbc68f40a</Guid>
+      </COMReference>
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.2.5" />
       <PackageReference Include="Serilog" Version="2.11.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />

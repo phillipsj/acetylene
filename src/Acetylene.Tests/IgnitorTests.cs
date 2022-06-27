@@ -20,7 +20,7 @@ namespace Acetylene.Tests {
             var ignitor = new Ignitor();
 
             // Act
-            var result = ignitor.Parse(ignitionFile);
+            var result = Ignitor.Parse(ignitionFile);
 
             // Assert
             result.Ignition.Version.Should().Be("3.3.0");

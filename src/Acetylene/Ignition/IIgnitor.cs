@@ -1,5 +1,3 @@
-﻿using System;
-
-public interface IIgnitor {
+﻿public interface IIgnitor {
 
 }

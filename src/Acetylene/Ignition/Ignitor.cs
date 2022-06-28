@@ -1,17 +1,30 @@
 ﻿using System.Collections;
 using System.DirectoryServices;
+using System.IO.Abstractions;
 using System.Text.Json;
+using Acetylene;
 using Serilog;
 
 public class Ignitor {
-    public Ignitor() {
+    private readonly IFileSystem _fileSystem;
+    
+    public Ignitor(IFileSystem fileSystem) {
+        _fileSystem = fileSystem;
     }
+    
+    public Ignitor(): this(new FileSystem()){}
 
-    public static IgnitionFile Parse(string contents) {
+    public IgnitionFile Parse(string contents) {
         var options = new JsonSerializerOptions() {
             PropertyNameCaseInsensitive = true
         };
         return JsonSerializer.Deserialize<IgnitionFile>(contents, options);
+    }
+    
+    public IFileInfo GetIgnitionConfig() {
+        var drive = _fileSystem.DriveInfo.GetDrives().GetIgnitionDrive();
+        var directory = drive.RootDirectory.GetDirectories("ignition").Single();
+        return directory.GetFiles("config.ign").Single();
     }
 
     public static void CreateUser(string name, string password, IList groups) {

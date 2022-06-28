@@ -14,13 +14,15 @@ public class CombustionTests {
         
         var combustionDirectory = new Mock<IDirectoryInfo>();
         combustionDirectory.Setup(c => c.Name).Returns("combustion");
+        combustionDirectory.Setup(d => d.GetFiles(It.IsAny<string>())).Returns(new[] {
+            scriptFileInfo.Object
+        });
+        
         var directoryInfo = new Mock<IDirectoryInfo>();
         directoryInfo.Setup(d => d.GetDirectories(It.IsAny<string>())).Returns(new[] {
             combustionDirectory.Object
         });
-        directoryInfo.Setup(d => d.GetFiles(It.IsAny<string>())).Returns(new[] {
-            scriptFileInfo.Object
-        });
+       
    
         var driveInfo = new Mock<IDriveInfo>();
         driveInfo.Setup(d => d.RootDirectory).Returns(directoryInfo.Object);
@@ -38,9 +40,9 @@ public class CombustionTests {
         var combustion = new Combustion.Combustion(fileSystem.Object);
         
         // Act 
-        //var script = combustion.RetrieveScript();
+        var script = combustion.RetrieveScript();
         
         // Assert
-        true.Should().BeTrue();
+        script.Name.Should().Be("script");
     }
 }

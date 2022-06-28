@@ -1,18 +1,11 @@
 ﻿using Acetylene.Service;
 using Serilog;
-using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using Topshelf;
 
 namespace Acetylene; 
 
 public class Program {
-    [SupportedOSPlatform("windows")]
-    public static void SupportedOnWindows() { }
     public static void Main() {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
-            SupportedOnWindows();
-        }
         var ts = HostFactory.Run(x => {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()

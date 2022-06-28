@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.DirectoryServices;
 using System.Text.Json;
+using Serilog;
 
 public class Ignitor {
     public Ignitor() {
@@ -16,8 +17,7 @@ public class Ignitor {
     public static void CreateUser(string name, string password, IList groups) {
         try {
             // check if user exists?
-            DirectoryEntry NewUser = new DirectoryEntry("WinNT://" +
-                                Environment.MachineName + ",computer").Children.Add(name, "user");
+            var NewUser = new DirectoryEntry($"WinNT://{Environment.MachineName},computer").Children.Add(name, "user");
             NewUser.Invoke("SetPassword", new object[] { password });
             NewUser.Invoke("Put", new object[] { "Description", "Acetylene Created User" });
             NewUser.CommitChanges();
@@ -34,7 +34,7 @@ public class Ignitor {
                 Serilog.Log.Debug("Successfully created group:" + group);
             }
         } catch {
-            Serilog.Log.Error("Encountered error while creating account:" + name);
+            Log.Error("Encountered error while creating account:" + name);
         }
     }
 
@@ -48,6 +48,7 @@ public class Ignitor {
         // icacls.exe path / inheritance:r / grant "username:F" / grant "SYSTEM:F"
 
         try {
+            
             if (System.IO.File.Exists(path)) {
             } else {
                 System.IO.File.Create(path);

@@ -1,18 +1,24 @@
-﻿using System.Collections;
-using System.DirectoryServices;
+﻿using System.DirectoryServices;
 using System.IO.Abstractions;
 using System.Text.Json;
 using Acetylene;
+using Acetylene.Ignition;
 using Serilog;
 
 public class Ignitor {
     private readonly IFileSystem _fileSystem;
-    
-    public Ignitor(IFileSystem fileSystem) {
+    private readonly IServiceController _serviceController;
+
+    public Ignitor(IFileSystem fileSystem, IServiceController serviceController) {
         _fileSystem = fileSystem;
+        _serviceController = serviceController;
     }
     
-    public Ignitor(): this(new FileSystem()){}
+    public Ignitor(IFileSystem fileSystem): this(fileSystem, new IgnitionServiceController()){}
+    
+    public Ignitor(IServiceController serviceController): this(new FileSystem(), serviceController){}
+    
+    public Ignitor(): this(new FileSystem(), new IgnitionServiceController()){}
 
     public static IgnitionFile Parse(string contents) {
         var options = new JsonSerializerOptions {
@@ -65,5 +71,19 @@ public class Ignitor {
         } catch {
             Log.Error("Encountered error while adding ssh keys for account:" + username);
         }
+    }
+
+    public void ProcessServices(List<Unit> units) {
+        var services = _serviceController.GetServices();
+        units.ForEach(x => {
+            var service = services.FirstOrDefault(s => s?.ServiceName == x.Name, null);
+            if (service is null) return;
+            if (x.Enabled) {
+                service.Start();
+            }
+            else {
+                service.Stop();
+            }
+        });
     }
 }

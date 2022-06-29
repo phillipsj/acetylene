@@ -1,4 +1,6 @@
 using System.IO.Abstractions;
+using System.ServiceProcess;
+using Acetylene.Ignition;
 using Moq;
 
 namespace Acetylene.Tests {
@@ -18,8 +20,7 @@ namespace Acetylene.Tests {
   }
 }
 ";
-            var ignitor = new Ignitor();
-
+ 
             // Act
             var result = Ignitor.Parse(ignitionFile);
 
@@ -64,6 +65,42 @@ namespace Acetylene.Tests {
             
             // Assert
             config.Name.Should().Be("config.ign");
+        }
+
+        [Fact]
+        public void ShouldProcessSystemDUnits() {
+            // Arrange
+            var dockerService = new Mock<IServiceController>();
+            dockerService.Setup(x => x.ServiceName).Returns("docker");
+            var sshd = new Mock<IServiceController>();
+            sshd.Setup(x => x.ServiceName).Returns("sshd");
+            
+            var controller = new Mock<IServiceController>();
+            controller.Setup(x => x.GetServices()).Returns(new[] { dockerService.Object, sshd.Object });
+            
+            var ignitor = new Ignitor(controller.Object);
+            var units = new List<Unit> {
+                new() {
+                    Name = "docker",
+                    Enabled = false
+                },
+                new() {
+                    Name = "sshd",
+                    Enabled = true
+                }
+            };
+            
+            // Act
+            ignitor.ProcessServices(units);
+            
+            // Assert
+            controller.Verify(x => x.GetServices(), Times.AtLeastOnce);
+            
+            dockerService.VerifyGet(x=> x.ServiceName);
+            dockerService.Verify(x=>x.Stop(), Times.AtLeastOnce);
+            
+            sshd.VerifyGet(x=>x.ServiceName, Times.AtLeastOnce);
+            sshd.Verify(x=>x.Start(), Times.AtLeastOnce);
         }
     }
 }

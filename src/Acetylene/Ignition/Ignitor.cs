@@ -14,8 +14,8 @@ public class Ignitor {
     
     public Ignitor(): this(new FileSystem()){}
 
-    public IgnitionFile Parse(string contents) {
-        var options = new JsonSerializerOptions() {
+    public static IgnitionFile Parse(string contents) {
+        var options = new JsonSerializerOptions {
             PropertyNameCaseInsensitive = true
         };
         return JsonSerializer.Deserialize<IgnitionFile>(contents, options);
@@ -27,52 +27,43 @@ public class Ignitor {
         return directory.GetFiles("config.ign").Single();
     }
 
-    public static void CreateUser(string name, string password, IList groups) {
+    public static void CreateUser(string name, string password, List<string> groups) {
         try {
-            // check if user exists?
-            var NewUser = new DirectoryEntry($"WinNT://{Environment.MachineName},computer").Children.Add(name, "user");
-            NewUser.Invoke("SetPassword", new object[] { password });
-            NewUser.Invoke("Put", new object[] { "Description", "Acetylene Created User" });
-            NewUser.CommitChanges();
-            Serilog.Log.Debug("Successfully created account:" + name);
+            using var directory = new DirectoryEntry($"WinNT://{Environment.MachineName},computer");
+            var newUser = directory.Children.Add(name, "user");
+            newUser.Invoke("SetPassword", password);
+            newUser.Invoke("Put", "Description", "Acetylene Created User");
+            newUser.CommitChanges();
+            Log.Information("Successfully created account:" + name);
 
             foreach (var group in groups) {
                 // check if group exists?
-                DirectoryEntry NewGroup = new DirectoryEntry("WinNT://" +
-                    Environment.MachineName + ",computer").Children.Add((string)group, "group");
-                if (NewGroup != null) {
-                    NewGroup.Invoke("Add", new object[] { NewUser.Path.ToString() });
-                }
-                NewGroup.CommitChanges();
-                Serilog.Log.Debug("Successfully created group:" + group);
+                var newGroup = directory.Children.Add(group, "group");
+                newGroup.Invoke("Add", newUser.Path);
+                newGroup.CommitChanges();
+
+                Log.Information("Successfully created group:" + group);
             }
-        } catch {
+        }
+        catch {
             Log.Error("Encountered error while creating account:" + name);
         }
     }
 
-    public static void AddSSHKey(IList keys, string username) {
-        Directory.CreateDirectory("C:\\ProgramData\\ssh");
+    public void AddSshKey(List<string> keys, string username) {
+        _fileSystem.Directory.CreateDirectory("C:\\ProgramData\\ssh");
 
         // if config.PrimaryGroup == "Administrators 
-        string path = @"C:\ProgramData\ssh\administrators_authorized_keys";
+        const string path = @"C:\ProgramData\ssh\administrators_authorized_keys";
         // icacls.exe "C:\ProgramData\ssh\administrators_authorized_keys" / inheritance:r / grant "Administrators:F" / grant "SYSTEM:F"
         // else path = @"C:\\Users\\" + username + "\\.ssh";
         // icacls.exe path / inheritance:r / grant "username:F" / grant "SYSTEM:F"
-
+       
         try {
-            
-            if (System.IO.File.Exists(path)) {
-            } else {
-                System.IO.File.Create(path);
-            }
-            foreach (var key in keys) {
-                using StreamWriter sw = System.IO.File.AppendText(path);
-                sw.WriteLine((string)key);
-            }
+            _fileSystem.File.AppendAllLines(path, keys);
 
         } catch {
-            Serilog.Log.Error("Encountered error while adding ssh keys for account:" + username);
+            Log.Error("Encountered error while adding ssh keys for account:" + username);
         }
     }
 }

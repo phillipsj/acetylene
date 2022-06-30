@@ -31,7 +31,7 @@ public class Systemd {
 
 public class Unit {
     public string?  Name { get; set; }
-    public bool?  Enabled { get; set; }
+    public bool  Enabled { get; set; }
     public string?  Contents { get; set; }
 }
 public class IgnitionFile {

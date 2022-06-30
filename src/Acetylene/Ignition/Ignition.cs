@@ -21,8 +21,12 @@ public class Storage {
 public class File {
     public string?  Path { get; set; }
     public string?  Mode { get; set; }
-    public string?  Contents { get; set; }
+    public Contents?  Contents { get; set; }
     public bool Overwrite { get; set; }
+}
+
+public class Contents {
+    public string? Source { get; set; }
 }
 
 public class Systemd {

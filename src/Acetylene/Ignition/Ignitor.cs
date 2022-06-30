@@ -3,12 +3,18 @@ using System.IO.Abstractions;
 using System.Text.Json;
 using Acetylene;
 using Acetylene.Ignition;
+using Microsoft.Win32;
 using Serilog;
+using Serilog.Configuration;
 
 public class Ignitor {
     private readonly IFileSystem _fileSystem;
     private readonly IServiceController _serviceController;
 
+    private const string ActiveComputerKey = "SYSTEM\\CurrentControlSet\\Control\\ComputerName\\ActiveComputerName";
+    private const string ComputerNameKey = "SYSTEM\\CurrentControlSet\\Control\\ComputerName\\ComputerName";
+    private const string TcpipParametersKey = "SYSTEM\\CurrentControlSet\\services\\Tcpip\\Parameters\\";
+    
     public Ignitor(IFileSystem fileSystem, IServiceController serviceController) {
         _fileSystem = fileSystem;
         _serviceController = serviceController;
@@ -68,8 +74,8 @@ public class Ignitor {
         try {
             _fileSystem.File.AppendAllLines(path, keys);
 
-        } catch {
-            Log.Error("Encountered error while adding ssh keys for account:" + username);
+        } catch(Exception e) {
+            Log.Error(e,"Encountered error while adding ssh keys for account:" + username);
         }
     }
 
@@ -85,5 +91,42 @@ public class Ignitor {
                 service.Stop();
             }
         });
+    }
+
+    public void ProcessFiles(List<File> files) {
+        files.ForEach(x => {
+            if (x.Path == "/etc/hostname") {
+                
+            }
+            if (_fileSystem.File.Exists(x.Path)) {
+                _fileSystem.File.AppendAllText(x.Path, x.Contents?.Source);
+            }
+            else {
+                _fileSystem.File.WriteAllText(x.Path, x.Contents?.Source);
+            }
+        });
+    }
+    
+    public static bool SetHostName(string name)
+    {
+        try {
+            var key = Registry.LocalMachine;
+            using var activeKey = key.CreateSubKey(ActiveComputerKey);
+            activeKey.SetValue("ComputerName", name);
+            activeKey.Close();
+            using var computerKey = key.CreateSubKey(ComputerNameKey);
+            computerKey.SetValue("ComputerName", name);
+            computerKey.Close();
+            using var tcpipKey = key.CreateSubKey(TcpipParametersKey);
+            tcpipKey.SetValue("Hostname",name);
+            tcpipKey.SetValue("NV Hostname",name);
+            tcpipKey.Close(); 
+            Log.Information("Hostname has been set to: {0}", name);
+            return true;
+        }
+        catch (Exception e) {
+            Log.Error(e, "Encountered error while setting hostname.");
+            return false;
+        }
     }
 }
